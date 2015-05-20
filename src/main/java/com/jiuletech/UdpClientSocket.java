@@ -88,15 +88,15 @@ public class UdpClientSocket {
     /**  
      * 测试客户端发包和接收回应信息的方法.  
      * @param args  
-     * @throws Exception  
+     * @throws Exception   
      */    
     public static void main(String[] args) throws Exception {    
         UdpClientSocket client = new UdpClientSocket();    
         String serverHost = "192.168.1.100";    
         int serverPort = 3344;
-        for(int i=0;i<2;i++) {
+        //for(int i=0;i<2;i++) {
         client.send(serverHost, serverPort, ("55DD01110113747100014100000151180001400000001060000000000000014000217710000001F54F6B4900000000000000011423.23563030.8330").getBytes());    
-        }
+        //}
         //String info = client.receive(serverHost, serverPort);    
         //System.out.println("服务端回应数据：" + info);    
     }    

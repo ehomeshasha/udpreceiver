@@ -1,38 +1,20 @@
 package com.jiuletech;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.junit.Test;
+
 
 /**
  * Unit test for simple App.
  */
-public class AppTest 
-    extends TestCase
-{
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
-    {
-        super( testName );
-    }
-
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
-    }
-
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
-    }
+public class AppTest  {
+	@Test
+	public void convert() {
+		String cols =  "mid,userid,spo2,heartrate,breath,skin,healthindex,ecg_ppt,ecg_mrt,ecg_p1,ecg_p0,ecg_b,ecg_a,ecg_area,activity,sleep_total_time,sleep_effective_time,sleep_rover_time,longitude,latitude,gsp_type,type,wear_type,time,year,month,day";
+		System.out.println(cols.split(",").length);
+		String wenhao = "";
+		for(String col : cols.split(",")) {
+			wenhao += ",?";
+		}
+		System.out.println(wenhao);
+	}
 }

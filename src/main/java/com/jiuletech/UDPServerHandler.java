@@ -1,8 +1,13 @@
 package com.jiuletech;
 
 
+import org.apache.log4j.Logger;
+
+import com.jiuletech.common.MsgBean;
+import com.jiuletech.common.MsgParser;
 import com.jiuletech.mysql.DbHelper;
 import com.jiuletech.mysql.MySQLRunner;
+import com.jiuletech.util.GsonUtils;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -13,7 +18,8 @@ import io.netty.channel.socket.DatagramPacket;
 public class UDPServerHandler extends
 		SimpleChannelInboundHandler<DatagramPacket> {
 	
-	private MySQLRunner mysqlRunner = new MySQLRunner(DbHelper.getQueryRunner());
+	
+	private static final Logger LOG = Logger.getLogger(UDPServerHandler.class);
 	
 	
 	@Override
@@ -35,13 +41,34 @@ public class UDPServerHandler extends
 		byte[] req = new byte[buf.readableBytes()];
 		buf.readBytes(req);
 		String body = new String(req, "UTF-8");
-		System.out.println("body:"+body);
-		//mysqlRunner.insertMysql(tbname, obj);
 		
 		
 		
 		
-		System.out.println(body);
+		LOG.info("msgbody=" + body);
+		
+		MsgParser msgParser = new MsgParser(body);
+		MsgBean msgBean = msgParser.parse();
+		
+		
+		//GsonUtils.print("ParsedMsgBean=", msgBean);
+		LOG.info("ParsedMsgBean=" + GsonUtils.toJson(msgBean));
+		
+		MySQLRunner mysqlRunner = new MySQLRunner(DbHelper.getQueryRunner());
+		mysqlRunner.insertMsg2Mysql(msgBean);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	}
 
 	@Override
