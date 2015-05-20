@@ -3,8 +3,12 @@ package com.jiuletech.mysql;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.dbutils.QueryRunner;
+import org.apache.commons.dbutils.ResultSetHandler;
+import org.apache.commons.dbutils.handlers.KeyedHandler;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.jiuletech.common.GroupDataBean;
@@ -28,9 +32,15 @@ public class MySQLRunner {
 	
 	
 	
-    
-
-    
+    public Map getMemberInfo(String userid) throws SQLException {
+    	userid = StringUtils.stripStart(userid,"0");
+    	ResultSetHandler h = new KeyedHandler("id");
+    	String queryString = "SELECT * FROM jl_member WHERE id='"+userid+"'";
+    	LOG.info("QueryString="+queryString);
+    	Map resultMap = (Map) runner.query(queryString, h);
+    	Map member = (Map) resultMap.get(new Long(userid));
+    	return member;
+    }
 
     public void insertMsg2Mysql(MsgBean msgBean) throws UnsupportedEncodingException, SQLException {
     	

@@ -97,7 +97,7 @@ public class UdpClientSocket {
         //for(int i=0;i<2;i++) {
         client.send(serverHost, serverPort, ("55DD01110113747100014100000151180001400000001060000000000000014000217710000001F54F6B4900000000000000011423.23563030.8330").getBytes());    
         //}
-        //String info = client.receive(serverHost, serverPort);    
-        //System.out.println("服务端回应数据：" + info);    
+        String info = client.receive(serverHost, serverPort);    
+        System.out.println("服务端回应数据：" + info);    
     }    
 }   

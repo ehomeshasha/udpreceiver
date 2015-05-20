@@ -58,7 +58,8 @@ public class UDPServerHandler extends
 		mysqlRunner.insertMsg2Mysql(msgBean);
 		
 		
-		
+//		ResponseHandler responseHandler = new ResponseHandler(msgBean, ctx, packet);
+//		responseHandler.send();
 		
 		
 		
