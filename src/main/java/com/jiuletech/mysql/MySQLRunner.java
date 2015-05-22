@@ -15,7 +15,7 @@ import com.jiuletech.common.GroupDataBean;
 import com.jiuletech.common.MsgBean;
 import com.jiuletech.util.DateUtil;
 import com.jiuletech.util.GsonUtils;
-import com.jiuletech.util.RadixUtil;
+import com.jiuletech.util.NumericUtil;
 
 /**
  * Created by hadoop on 2014/12/29.
@@ -44,6 +44,15 @@ public class MySQLRunner {
 
     public void insertMsg2Mysql(MsgBean msgBean) throws UnsupportedEncodingException, SQLException {
     	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	
     	String tablename = "jl_data";
     	
     	String gps_type = "";
@@ -71,16 +80,15 @@ public class MySQLRunner {
 			String breath = data.getBreath();
 			String skin = data.getSkin();
 			String healthindex = data.getHealthindex();
-			String ecg_ppt = RadixUtil.from16to10(data.getECG_PPT());
-			String ecg_mrt = RadixUtil.from16to10(data.getECG_MRT());
-			String ecg_p1 = RadixUtil.from16to10(data.getECG_P1());
-			String ecg_p0 = RadixUtil.from16to10(data.getECG_P0());
-			String ecg_b = RadixUtil.from16to10(data.getECG_B());
-			String ecg_a = RadixUtil.from16to10(data.getECG_A());
-			String ecg_area = RadixUtil.from16to10(data.getECG_AREA());
+			String ecg_ppt = data.getECG_PPT();
+			String ecg_mrt = data.getECG_MRT();
+			String ecg_p1 = data.getECG_P1();
+			String ecg_p0 = data.getECG_P0();
+			String ecg_b = data.getECG_B();
+			String ecg_a = data.getECG_A();
+			String ecg_area = data.getECG_AREA();
 			String wear_type = "0";
 			String time = data.getTime();
-			time = RadixUtil.from16to10(time);
 			DateUtil dateUtil = new DateUtil(Long.parseLong(time)*1000);
 			String year = String.valueOf(dateUtil.getYear());
 			String month = String.valueOf(dateUtil.getMonth());
@@ -92,26 +100,5 @@ public class MySQLRunner {
     		LOG.info("params="+GsonUtils.toJson(params));
     		runner.update(sql, params);
     	}
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	//String sql = "insert into "+tbname+" (gu_aid,gu_url,gu_is_caiji,gu_page,gu_hash,gu_tao_id,gu_ref,gu_add_time,gu_start_time,gu_end_time) values(?,?,?,?,?,?,?,?,?,?)  ";
-    	//Object[] params = {goods.getAid(), goods.getSalesUrls(), 0, page, hash, goods.getTid(), 9,(int)(System.currentTimeMillis()/1000), goods.getStart_time(), goods.getEnd_time()};
-    	//runner.update(sql, params);
-    }
-
-    
-
-
-	
+     }
 }
