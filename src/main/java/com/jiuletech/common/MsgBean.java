@@ -3,6 +3,10 @@ package com.jiuletech.common;
 import java.util.List;
 
 public class MsgBean {
+	
+	private String insertTableName = null;
+	
+	private boolean isUpdateWarnTable = false;
 
 	private String updateFlagA = null;
 	
@@ -31,6 +35,22 @@ public class MsgBean {
 	private String longitude = null;
 	
 	private String latitude = null;
+
+	public String getInsertTableName() {
+		return insertTableName;
+	}
+
+	public void setInsertTableName(String insertTableName) {
+		this.insertTableName = insertTableName;
+	}
+
+	public boolean isUpdateWarnTable() {
+		return isUpdateWarnTable;
+	}
+
+	public void setUpdateWarnTable(boolean isUpdateWarnTable) {
+		this.isUpdateWarnTable = isUpdateWarnTable;
+	}
 
 	public String getUpdateFlagA() {
 		return updateFlagA;

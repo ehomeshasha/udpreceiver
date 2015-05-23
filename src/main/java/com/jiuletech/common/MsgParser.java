@@ -1,15 +1,17 @@
 package com.jiuletech.common;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+import com.jiuletech.mysql.DbHelper;
+import com.jiuletech.mysql.MySQLRunner;
 import com.jiuletech.util.NumericUtil;
 
 public class MsgParser {
 	
-	private static final Pattern geoPattern = Pattern.compile("^([0-9]+)([0-9]{2}\\.[0-9]{4})([0-9]+)([0-9]{2}\\.[0-9]{4})$");
+	private MySQLRunner mysqlRunner = new MySQLRunner(DbHelper.getQueryRunner());
 	
 	private String body = null;
 	
@@ -17,15 +19,17 @@ public class MsgParser {
 		this.body = body;
 	}
 	
-	public MsgBean parse() throws ParserException {
+	public MsgBean parse() throws ParserException, SQLException {
 		
+		String insertTableName = Constants.JL_DATA;
 		
+		boolean isUpdateWarnTable = false;
 		
 		int tmp = 0;
 		
 		String packetHead = body.substring(tmp, tmp+4);
 		tmp = tmp+4;
-		if(!packetHead.equals("55DD")) {
+		if(!packetHead.equals(Constants.PACKET_HEAD)) {
 			throw new ParserException("包头不正确");
 		}
 		
@@ -37,14 +41,35 @@ public class MsgParser {
 		tmp = tmp+1;
 		String gpsFlagB = body.substring(tmp, tmp+1);
 		tmp = tmp+1;
+		//如果低位为0那么就是报警类型要更新warn表
+		if(gpsFlagB.equals("1")) {
+			isUpdateWarnTable = true;
+		}
 		
+		if((gpsFlagA+gpsFlagB).equals(Constants.ADJUST_TIME_FLAG)) {
+			//表明上传的为时间校准数据
+			insertTableName = Constants.JL_DATA_RESET1;
+		}
 		
-		
-		int uploadCount = Integer.parseInt(body.substring(tmp, tmp+2));
+		int uploadCount = Integer.parseInt(body.substring(tmp, tmp+2), 16);
 		tmp = tmp+2;
 		
 		String mid = body.substring(tmp, tmp+13);
-		tmp = tmp+13;
+		if(!mysqlRunner.isMidExists(mid)) {
+			mid = body.substring(tmp, tmp+20);
+			if(!mysqlRunner.isMidExists(mid)) {
+				//13位和20位都找不到，就丢弃不下发数据
+				throw new ParserException("13位和20位都找不到，就丢弃不下发数据");
+			} else {
+				//20位能够找到
+				tmp = tmp + 20;
+			}
+		} else {
+			//13位能够找到
+			tmp = tmp+13;
+		}
+		
+		
 		String userid = String.valueOf(Integer.parseInt(body.substring(tmp, tmp+8)));
 		tmp = tmp+8;
 		
@@ -112,8 +137,8 @@ public class MsgParser {
 		tmp = tmp+2;
 		//11423.23563030.8330
 		String geoString = body.substring(tmp);
-		System.out.println(geoString);
-		Matcher geoMatcher = geoPattern.matcher(geoString);
+		//System.out.println(geoString);
+		Matcher geoMatcher = Constants.geoPattern.matcher(geoString);
 		String longitude = null;
 		String latitude = null;
 		if(geoMatcher.find()) {
@@ -126,6 +151,8 @@ public class MsgParser {
 		}
 		
 		MsgBean msgBean = new MsgBean();
+		msgBean.setInsertTableName(insertTableName);
+		msgBean.setUpdateWarnTable(isUpdateWarnTable);
 		msgBean.setUpdateFlagA(updateFlagA);
 		msgBean.setUpdateFlagB(updateFlagB);
 		msgBean.setGpsFlagA(gpsFlagA);

@@ -23,8 +23,6 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.DatagramPacket;
 import io.netty.util.CharsetUtil;
 
-import java.util.Random;
-
 import org.apache.log4j.Logger;
 
 import com.jiuletech.common.MsgBean;
@@ -68,7 +66,7 @@ public class QuoteOfTheMomentServerHandler extends SimpleChannelInboundHandler<D
 		
 		
 		
-		LOG.info("msgbody=" + body);
+		LOG.info("请求消息体=" + body);
 		
 		MsgParser msgParser = new MsgParser(body);
 		MsgBean msgBean = msgParser.parse();
@@ -83,7 +81,7 @@ public class QuoteOfTheMomentServerHandler extends SimpleChannelInboundHandler<D
 		
 		ResponseHandler responseHandler = new ResponseHandler(msgBean);
 		String response = responseHandler.getResponse();
-		LOG.info("response="+response);
+		LOG.info("响应字符串="+response);
 		ctx.write(new DatagramPacket(
               Unpooled.copiedBuffer(response, CharsetUtil.UTF_8), packet.sender()));
 		

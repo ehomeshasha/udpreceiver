@@ -25,7 +25,7 @@ public class QuoteOfTheMomentClientHandler extends SimpleChannelInboundHandler<D
     @Override
     public void messageReceived(ChannelHandlerContext ctx, DatagramPacket msg) {
         String response = msg.content().toString(CharsetUtil.UTF_8);
-        System.out.println(response);
+        System.out.println("从服务端得到的响应字符串="+response);
         ctx.close();
 //        if (response.startsWith("QOTM: ")) {
 //            System.out.println("Quote of the Moment: " + response.substring(6));

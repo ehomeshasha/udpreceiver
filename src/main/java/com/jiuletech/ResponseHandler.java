@@ -1,8 +1,11 @@
 package com.jiuletech;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
+import com.jiuletech.common.Constants;
+import com.jiuletech.common.GroupDataBean;
 import com.jiuletech.common.MsgBean;
 import com.jiuletech.mysql.DbHelper;
 import com.jiuletech.mysql.MySQLRunner;
@@ -20,6 +23,7 @@ public class ResponseHandler {
 	}
 
 
+	@SuppressWarnings("rawtypes")
 	public String getResponse() throws SQLException {
 		String response = "";
 		
@@ -44,11 +48,26 @@ public class ResponseHandler {
 		String date = dateUtil.getDateString();
 		String timestamp = String.valueOf(Math.round(curTimestamp/1000));
 		
-		response = pid + tphone + status + 
+		
+		
+		response = pid + 
+				StringUtils.leftPad(tphone, 11, "0") + 
+				status + 
 				StringUtils.leftPad(age, 2, "0") + 
-				height + weight + rphone1 + rphone2 + 
+				StringUtils.leftPad(height, 3, "0") + 
+				StringUtils.leftPad(weight, 2, "0") + 
+				StringUtils.leftPad(rphone1, 11, "0") + 
+				StringUtils.leftPad(rphone2, 11, "0") + 
 				StringUtils.leftPad(id, 8, "0") + 
 				HMS + date + timestamp;
+		
+		if(msgBean.getInsertTableName().equals(Constants.JL_DATA_RESET1)) {
+			List<GroupDataBean> groupDataBeanList = msgBean.getGroupDataBeanList();
+			String ECG_A = groupDataBeanList.get(groupDataBeanList.size()-1).getECG_A();
+			response += mysqlRunner.getSoftVersion(ECG_A);
+			
+		}
+		
 		
 		return response;
 	}
