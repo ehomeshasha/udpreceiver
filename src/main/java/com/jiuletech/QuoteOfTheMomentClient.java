@@ -61,7 +61,13 @@ public final class QuoteOfTheMomentClient {
             ch.writeAndFlush(new DatagramPacket(
                     Unpooled.copiedBuffer("55DD000701137471000127210000000000000000000000000000000000000000000OV53V1.00.01516B8180000000000000000000000000000000000", CharsetUtil.UTF_8),
                     new InetSocketAddress("127.0.0.1", PORT))).sync();
-
+            ch.writeAndFlush(new DatagramPacket(
+                    Unpooled.copiedBuffer("55DD000701147471000095500003055000000000000000000000000000000000000OV53V1.00.0154F6B044031300000000000000000000000000000", CharsetUtil.UTF_8),
+                    new InetSocketAddress("127.0.0.1", PORT))).sync();
+            ch.writeAndFlush(new DatagramPacket(
+                    Unpooled.copiedBuffer("55DD000701898601137471000137301000000000000000000000000000000000000OV53V1.00.06516B8180000000000000000000000000000000000", CharsetUtil.UTF_8),
+                    new InetSocketAddress("127.0.0.1", PORT))).sync();
+            
             // QuoteOfTheMomentClientHandler will close the DatagramChannel when a
             // response is received.  If the channel is not closed within 5 seconds,
             // print an error message and quit.
