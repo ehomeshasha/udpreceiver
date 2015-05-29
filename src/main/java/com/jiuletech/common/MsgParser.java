@@ -41,7 +41,7 @@ public class MsgParser {
 		tmp = tmp+1;
 		String gpsFlagB = body.substring(tmp, tmp+1);
 		tmp = tmp+1;
-		//如果低位为0那么就是报警类型要更新warn表
+		//如果低位为1那么就是报警类型要更新warn表
 		if(gpsFlagB.equals("1")) {
 			isUpdateWarnTable = true;
 		}
@@ -101,10 +101,19 @@ public class MsgParser {
 			tmp = tmp+4;
 			String ECG_B = NumericUtil.from16to10(body.substring(tmp, tmp+4));
 			tmp = tmp+4;
-			String ECG_A = NumericUtil.from16to10(body.substring(tmp, tmp+4));
-			tmp = tmp+4;
-			String ECG_AREA = NumericUtil.from16to10(body.substring(tmp, tmp+8));
-			tmp = tmp+8;
+			String ECG_A = null;
+			String ECG_AREA = null;
+			if((gpsFlagA+gpsFlagB).equals(Constants.ADJUST_TIME_FLAG)) {
+				ECG_A = body.substring(tmp, tmp+4);
+				tmp = tmp+4;
+				ECG_AREA = body.substring(tmp, tmp+8);
+				tmp = tmp+8;
+			} else {
+				ECG_A = NumericUtil.from16to10(body.substring(tmp, tmp+4));
+				tmp = tmp+4;
+				ECG_AREA = NumericUtil.from16to10(body.substring(tmp, tmp+8));
+				tmp = tmp+8;
+			}
 			String time = NumericUtil.from16to10(body.substring(tmp, tmp+8));
 			tmp = tmp+8;
 			
@@ -135,19 +144,26 @@ public class MsgParser {
 		tmp = tmp+4;
 		String sleep_rove_time = NumericUtil.from16to10(body.substring(tmp, tmp+2));
 		tmp = tmp+2;
-		//11423.23563030.8330
-		String geoString = body.substring(tmp);
-		//System.out.println(geoString);
-		Matcher geoMatcher = Constants.geoPattern.matcher(geoString);
+		
 		String longitude = null;
 		String latitude = null;
-		if(geoMatcher.find()) {
-			longitude = NumericUtil.formatGeoString(Double.parseDouble(geoMatcher.group(1)), 
-					Double.parseDouble(geoMatcher.group(2)));
-			latitude = NumericUtil.formatGeoString(Double.parseDouble(geoMatcher.group(3)), 
-					Double.parseDouble(geoMatcher.group(4)));		
+		if((gpsFlagA+gpsFlagB).equals(Constants.ADJUST_TIME_FLAG)) {
+			longitude = "0";
+			latitude = "0";
 		} else {
-			throw new ParserException("Cannot parse geo location");
+		
+			//11423.23563030.8330
+			String geoString = body.substring(tmp);
+			//System.out.println(geoString);
+			Matcher geoMatcher = Constants.geoPattern.matcher(geoString);
+			if(geoMatcher.find()) {
+				longitude = NumericUtil.formatGeoString(Double.parseDouble(geoMatcher.group(1)), 
+						Double.parseDouble(geoMatcher.group(2)));
+				latitude = NumericUtil.formatGeoString(Double.parseDouble(geoMatcher.group(3)), 
+						Double.parseDouble(geoMatcher.group(4)));		
+			} else {
+				throw new ParserException("Cannot parse geo location");
+			}
 		}
 		
 		MsgBean msgBean = new MsgBean();
