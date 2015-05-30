@@ -3,3 +3,4 @@
 target
 .settings
 src/main/resources/mysql-conf.properties
+logs
