@@ -49,7 +49,7 @@ public class MySQLRunner {
 	
 	public String getSoftVersion(String hardVersion) throws SQLException {
 		ResultSetHandler h = new KeyedHandler("hard_version");
-    	String queryString = "SELECT soft_version FROM jl_member WHERE hard_version='"+hardVersion+"'";
+    	String queryString = "SELECT soft_version,hard_version FROM "+Constants.JL_VERSION+" WHERE hard_version='"+hardVersion+"'";
     	LOG.info("QueryString="+queryString);
     	Map resultMap = (Map) runner.query(queryString, h);
     	Map version = (Map) resultMap.get(hardVersion);
@@ -59,7 +59,7 @@ public class MySQLRunner {
     public Map getMemberInfo(String userid) throws SQLException {
     	userid = StringUtils.stripStart(userid,"0");
     	ResultSetHandler h = new KeyedHandler("id");
-    	String queryString = "SELECT * FROM jl_member WHERE id='"+userid+"'";
+    	String queryString = "SELECT * FROM "+Constants.JL_MEMBER+" WHERE id='"+userid+"'";
     	LOG.info("查询字符串="+queryString);
     	Map resultMap = (Map) runner.query(queryString, h);
     	Map member = (Map) resultMap.get(new Long(userid));
@@ -173,7 +173,7 @@ public class MySQLRunner {
     
     
 	public boolean isMidExists(String mid) throws SQLException {
-		String queryString = "SELECT count(1) AS count FROM jl_member WHERE pid=?";
+		String queryString = "SELECT count(1) AS count FROM "+Constants.JL_MEMBER+" WHERE pid=?";
     	Object[] params = {mid};
     	LOG.info("查询字符串="+queryString);
     	LOG.info("查询参数="+GsonUtils.toJson(params));

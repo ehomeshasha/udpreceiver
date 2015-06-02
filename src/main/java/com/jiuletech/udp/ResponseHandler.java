@@ -1,4 +1,4 @@
-package com.jiuletech;
+package com.jiuletech.udp;
 
 import java.sql.SQLException;
 import java.util.List;

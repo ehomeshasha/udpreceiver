@@ -15,6 +15,10 @@ public class Constants {
 	
 	public static final String JL_DATA_RESET1 = "jl_data_reset1";
 	
+	public static final String JL_MEMBER = "jl_member";
+	
+	public static final String JL_VERSION = "jl_version";
+	
 	public static final String ADJUST_TIME_FLAG = "07";
 
 }
